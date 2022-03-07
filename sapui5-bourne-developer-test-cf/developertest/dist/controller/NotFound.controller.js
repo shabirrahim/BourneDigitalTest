@@ -1,1 +1,0 @@
-sap.ui.define(["au/com/bournedigital/developertest/controller/BaseController"],function(e){"use strict";return e.extend("au.com.bournedigital.developertest.controller.NotFound",{onLinkPressed:function(){this.getRouter().navTo("worklist")}})});
