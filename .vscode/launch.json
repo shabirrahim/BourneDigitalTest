@@ -2,8 +2,8 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "developertest",
-      "cwd": "${workspaceFolder}/sapui5-bourne-developer-test-cf/developertest",
+      "name": "sapui5-bourne-developer-test-cf",
+      "cwd": "${workspaceFolder}",
       "runtimeArgs": [
         "fiori",
         "run"
@@ -21,7 +21,7 @@
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
       "env": {
-        "run.config": "{\"handlerId\":\"fiori_tools\",\"runnableId\":\"/home/user/projects/sapui5-bourne-developer-test-cf/sapui5-bourne-developer-test-cf/developertest\"}",
+        "run.config": "{\"handlerId\":\"fiori_tools\",\"runnableId\":\"/home/user/projects/sapui5-bourne-developer-test-cf\"}",
         "FIORI_TOOLS_UI5_VERSION": "1.98.0",
         "FIORI_TOOLS_UI5_URI": "https://ui5.sap.com",
         "FIORI_TOOLS_BACKEND_CONFIG": "[{\"path\":\"/v2\",\"destination\":\"Northwind\"}]"
