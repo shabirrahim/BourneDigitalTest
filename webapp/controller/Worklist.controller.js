@@ -4,8 +4,9 @@ sap.ui.define([
 		"sap/ui/core/routing/History",
 		"au/com/bournedigital/developertest/model/formatter",
 		"sap/ui/model/Filter",
+        "sap/ui/core/Fragment",
 		"sap/ui/model/FilterOperator"
-	], function (BaseController, JSONModel, History, formatter, Filter, FilterOperator) {
+	], function (BaseController, JSONModel, History, formatter, Filter,Fragment, FilterOperator) {
 		"use strict";
 
 		return BaseController.extend("au.com.bournedigital.developertest.controller.Worklist", {
@@ -92,6 +93,99 @@ sap.ui.define([
 			},
 
 
+            openQuickView: function (oModel, that) {
+                var olinkSource = that.oEventSource;
+                    var oView = that.getView();
+                    that.prepareQuickViewModel(oModel);
+                if (!that._pQuickView) {
+                    that._pQuickView = Fragment.load({
+                        id: oView.getId(),
+                        name: "au.com.bournedigital.developertest.view.QuickView",
+                        controller: that
+                    }).then(function (oQuickView) {
+                        oView.addDependent(oQuickView);
+                        return oQuickView;
+                    });
+                }
+                that._pQuickView.then(function (oQuickView){
+                   // oQuickView.setModel(oModel);
+                    oQuickView.setModel(that.employeeModel);
+                    oQuickView.openBy(olinkSource);
+                });
+            },
+
+            prepareQuickViewModel: function(oModel){
+
+                 var modData = oModel.getData();                
+                 this.employeeModel = new sap.ui.model.json.JSONModel( {
+                                    "pages": [
+                                        {
+                                            "pageId": "employeePageId",
+                                            "header": "Employee Details",
+                                            "icon": "sap-icon://person-placeholder",
+                                            "displayShape": "Square",
+                                            "title": modData.FirstName + " " + modData.LastName,
+                                            "description": modData.Title,
+                                            "groups": [
+                                                {
+                                                    "heading": "Address Details",
+                                                    "elements": [
+                                                        {
+                                                            "label": "Address",
+                                                            "value": modData.Address                                                            
+                                                        },
+                                                        {
+                                                            "label": "City",
+                                                            "value": modData.City
+                                                        },
+                                                        {
+                                                            "label": "PostCode",
+                                                            "value": modData.PostalCode                                                         
+                                                        }
+                                                        ,
+                                                        {
+                                                            "label": "Phone",
+                                                            "value": modData.HomePhone,
+                                                            "elementType": "phone"
+                                                        },
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                });
+
+            },
+
+
+            handleEmployeeRespPress: function (oEvent) {
+               
+                this.oEventSource =  oEvent.getSource();
+                var that = this;
+                var empId = oEvent.getSource().getBindingContext().getProperty('EmployeeID');
+               
+                var EmpModel = this.getView().getModel();
+
+                EmpModel.read("/Employees("+empId+")", {
+                    success: this._fnEmpPressSuccessVariants.bind(this),
+                    error: this._fnEmpPressErrorVariants.bind(this)
+                } );
+
+			},
+
+            _fnEmpPressSuccessVariants: function (oData) {
+
+                var oJsonModel = new sap.ui.model.json.JSONModel();
+                oJsonModel.setData(oData);
+                 this.openQuickView(oJsonModel, this);
+
+            },
+            
+            
+            _fnEmpPressErrorVariants: function (oItem) {
+                alert("Failure");
+
+            },
 
 			/**
 			 * Event handler when the share in JAM button has been clicked
@@ -151,7 +245,10 @@ sap.ui.define([
 			 * @private
 			 */
 			_showObject : function (oItem) {
-				this.getRouter().navTo("object");
+               
+                var orderIdVal = oItem.getBindingContext().getProperty('OrderID');
+                //oItem.getBindingContext().getObject().OrderID;                
+            	this.getRouter().navTo("object", {objectId : orderIdVal});
 			},
 
 			/**

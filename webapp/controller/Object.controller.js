@@ -35,7 +35,7 @@ sap.ui.define([
 					});
 
 				this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
-
+                
 				// Store original busy indicator delay, so it can be restored later on
 				iOriginalBusyDelay = this.getView().getBusyIndicatorDelay();
 				this.setModel(oViewModel, "objectView");
@@ -85,6 +85,7 @@ sap.ui.define([
 					var sObjectPath = this.getModel().createKey("Orders", {
 						OrderID :  sObjectId
 					});
+                    sObjectPath = sObjectPath+"?$expand=Customer,Employee,Order_Details"
 					this._bindView("/" + sObjectPath);
 				}.bind(this));
 			},
@@ -143,7 +144,26 @@ sap.ui.define([
 				oResourceBundle.getText("shareSendEmailObjectSubject", [sObjectId]));
 				oViewModel.setProperty("/shareSendEmailMessage",
 				oResourceBundle.getText("shareSendEmailObjectMessage", [sObjectName, sObjectId, location.href]));
-			}
+			},
+
+
+            _onUpdateFinished : function (oEvent) {
+                  
+                var oTable = oEvent.getSource(),
+                iTotalItems = oEvent.getParameter("total"),
+                oTableItems = oEvent.getSource().getItems(), 
+                unitPriceSum = 0;
+
+                // only calculate sum if the length is final         
+                if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {                                    
+                        for (var i=0; i<oTableItems.length;i++) {
+                            unitPriceSum = unitPriceSum + parseFloat(oTableItems[i].getCells()[1].getNumber()); 
+                        }
+                        var oViewModel = this.getModel("objectView");
+                        oViewModel.setProperty("/headerTotalValue", unitPriceSum);
+                }               
+                
+            }   
 
 		});
 
