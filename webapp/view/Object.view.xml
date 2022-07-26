@@ -3,6 +3,7 @@
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:semantic="sap.f.semantic"
+    xmlns:layout="sap.ui.layout"
 	xmlns:footerbar="sap.ushell.ui.footerbar">
 
 	<semantic:SemanticPage
@@ -13,17 +14,119 @@
 		busyIndicatorDelay="{objectView>/delay}">
 
 		<semantic:titleHeading>
-			<Title text="{CustomerID}" />
+            <layout:HorizontalLayout>
+                <Title text="{Customer/CompanyName}" class="headerPaddingRight" />
+                <Text text="{i18n>objectOrderIdHeader1} {OrderID}" class="headerSmallLabel"/>
+            </layout:HorizontalLayout>   
 		</semantic:titleHeading>
 
+        <!-- Header Content -->
 		<semantic:headerContent>
-			<ObjectNumber
-				number="{
-					path: 'OrderID',
-					formatter: '.formatter.numberUnit'
-				}"
-			/>
+			<layout:HorizontalLayout allowWrapping="true">
+
+				<layout:VerticalLayout class="headerPaddingRight">
+					<ObjectAttribute title="{i18n>objectContactName}" text="{Customer/ContactName}"/>
+					<ObjectAttribute title="{i18n>objectContactTitle}" text="{Customer/ContactTitle}" class="headerPaddingStart"/>
+					<ObjectAttribute title="{i18n>objectPhone}" text="{Customer/Phone}" class="headerPaddingStart"/>
+				</layout:VerticalLayout>
+
+	            <layout:VerticalLayout  class="headerPaddingRight">
+					<ObjectAttribute title="{i18n>objectAddress}" text="{Customer/Address}"/>
+					<ObjectAttribute title="{i18n>objectPostalCode}" text="{Customer/PostalCode}" class="headerPaddingStart"/>
+					<ObjectAttribute title="{i18n>objectCountry}" text="{Customer/Country}" class="headerPaddingStart"/>
+				</layout:VerticalLayout>
+
+               <layout:VerticalLayout>
+					<ObjectAttribute title="{i18n>objectTotalValue}"/>
+
+                    <layout:HorizontalLayout>
+	                         <ObjectNumber class="headerBigLabel"
+								number="{
+									path: 'objectView>/headerTotalValue',
+									formatter: '.formatter.removeDeicimal'
+								}"/>
+                  
+				      <Text text="AUD" id="currencyLbl" class="headerSmallCurrencyLabel"/> <!-- Not sure where this currency code comes from, hence hard coded for now instead of taking from model  -->
+                     </layout:HorizontalLayout>
+
+               </layout:VerticalLayout>  
+			</layout:HorizontalLayout>
 		</semantic:headerContent>
+			
+      	<!-- Content -->
+		<semantic:content>
+
+        <IconTabBar
+		id="idIconTabBarInlineMode"		
+        backgroundDesign = "Transparent"
+		expanded="true"
+		>
+		<items>
+			<IconTabFilter
+				text="Order Details"
+			>
+
+
+                    <Table
+                                    id="idProductsTable"
+                                    inset="false"
+                                    updateFinished = "_onUpdateFinished"
+                                    items="{path:'Order_Details'}"
+                                    class="sapFSemanticPageAlignContent"
+                                    width="auto">
+
+                                    <columns>
+                                        
+                                        <Column>
+                                            <Text text="{i18n>objectTableHeader2} Id"/>
+                                        </Column>
+
+                                        <Column minScreenWidth="Tablet" demandPopin="true">
+                                            <Text text="{i18n>objectTableHeader3}"/>
+                                        </Column>
+
+                                        <Column minScreenWidth="Tablet" demandPopin="true">
+                                            <Text text="{i18n>objectTableHeader4}"/>
+                                        </Column>
+
+                                        <Column minScreenWidth="Tablet" demandPopin="true">
+                                            <Text text="{i18n>objectTableHeader5}"/>
+                                        </Column>
+
+                                    </columns>
+
+                                    <items>
+                                        <ColumnListItem vAlign="Middle">
+                                            <cells>
+                                                <ObjectIdentifier title="{Name}" text="{ProductID}"/>                                               
+                                                <ObjectNumber number= "{UnitPrice}" />
+                                                <ObjectNumber
+                                                    number="{
+                                                        path: 'Quantity',
+                                                        formatter: '.formatter.removeDeicimal'
+                                                 }"/>
+
+                                                <ObjectStatus                                                    
+                                                    text="{Discount}"                                                    
+                                                    state="Warning" />
+                                             
+
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+
+
+
+			</IconTabFilter>
+
+
+            </items>
+                </IconTabBar>
+
+			
+		</semantic:content>
+		
 
 		<semantic:sendEmailAction>
 			<semantic:SendEmailAction id="shareEmail" press="onShareEmailPress"/>

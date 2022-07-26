@@ -20,7 +20,10 @@
 				width="auto"
 				items="{
 					path: '/Orders',
-					sorter: {
+                    parameters: {
+                        expand: 'Employee, Customer'
+                    },
+                    sorter: {
 						path: 'CustomerID',
 						descending: false
 					}
@@ -48,9 +51,20 @@
 					<Column id="nameColumn">
 						<Text text="{i18n>tableNameColumnTitle}" id="nameColumnTitle"/>
 					</Column>
+
+                    <Column id="nameColumn1">
+						<Text text="{i18n>tableOrderDateColumnTitle}" id="orderDateColumnTitle"/>
+					</Column>
+
+	                <Column id="nameColumn2">
+						<Text text="{i18n>tableEmpResponseColumnTitle}" id="EmpResponseColumnTitle"/>
+					</Column>
+
 					<Column id="unitNumberColumn" hAlign="End">
 						<Text text="{i18n>tableUnitNumberColumnTitle}" id="unitNumberColumnTitle"/>
 					</Column>
+
+                    
 				</columns>
 
 				<items>
@@ -59,7 +73,27 @@
 						press="onPress">
 						<cells>
 							<ObjectIdentifier
-								title="{CustomerID}"/>
+								title="{Customer/CompanyName}"
+                                text="{CustomerID}"
+                                />
+                                
+
+                            <ObjectIdentifier
+								text="{
+									path: 'OrderDate',
+									formatter: '.formatter.formatDate'
+								}"                                
+                            />								
+
+                            <ObjectIdentifier
+                                title="{Employee/FirstName} {Employee/LastName}"
+                                titleActive = "true"
+                                titlePress="handleEmployeeRespPress" />
+
+
+            
+
+
 							<ObjectNumber
 								number="{
 									path: 'OrderID',
