@@ -1,0 +1,22 @@
+.headerBigLabel { 
+    height: 50px; 
+    font-size: 25px;  
+    padding-top: 5px
+}
+
+.headerPaddingStart { 
+    padding-block-start: 10px ;
+}
+
+.headerPaddingRight { 
+    padding-right: 30px ;
+}
+
+.headerSmallLabel { 
+    padding-right: 30px ;
+    padding-top: 5px ;
+}
+.headerSmallCurrencyLabel { 
+    padding-right: 10px ;
+    padding-top: 5px ;
+}
