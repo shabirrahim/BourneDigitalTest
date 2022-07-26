@@ -15,7 +15,27 @@ sap.ui.define([
 					return "";
 				}
 				return parseFloat(sValue).toFixed(2);
-			}
+			},
+
+            removeDeicimal : function (sValue) {
+                if (!sValue) {
+					return 0;
+				}
+				return parseInt(sValue);
+                				
+            },
+
+            formatDate: function (val) {
+          
+                if (val) {
+                    jQuery.sap.require("sap.ui.core.format.DateFormat");
+
+                    var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "dd/MM/yyyy" }); 
+                    return dateFormat.format(val);
+                }else{
+                    return "";
+                }
+            }
 
 		};
 
